@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Upload - Biblioteca Digital</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .results { margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 4px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test de Sistema de Upload</h1>
+        
+        <div class="form-group">
+            <label>Estado del Sistema:</label>
+            <button onclick="testSystem()">Verificar Conectividad</button>
+            <div id="systemStatus"></div>
+        </div>
+
+        <form id="uploadForm">
+            <div class="form-group">
+                <label>Email Admin:</label>
+                <input type="email" id="email" value="biblioteca.web.2025@gmail.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Contraseña:</label>
+                <input type="password" id="password" value="admin123" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Título del Documento:</label>
+                <input type="text" id="title" value="Documento de Prueba" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Autor:</label>
+                <input type="text" id="author" value="Sistema de Pruebas" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Tipo:</label>
+                <select id="type" required>
+                    <option value="book">Libro</option>
+                    <option value="article">Artículo</option>
+                    <option value="thesis">Tesis</option>
+                    <option value="report">Reporte</option>
+                    <option value="libros" selected>Libros (Test)</option> 
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Año:</label>
+                <input type="number" id="year" value="2025" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Descripción:</label>
+                <textarea id="description">Documento de prueba para verificar el sistema de upload</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Archivo:</label>
+                <input type="file" id="file" accept=".pdf,.doc,.docx,.txt,.jpg,.png" required>
+            </div>
+            
+            <div class="form-group">
+                <button type="button" onclick="login()">1. Login</button>
+                <button type="button" onclick="uploadDocument()" id="uploadBtn" disabled>2. Upload Documento</button>
+                <button type="button" onclick="checkDocuments()">3. Verificar Documentos</button>
+            </div>
+        </form>
+        
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        let authToken = null;
+
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            results.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+            results.scrollTop = results.scrollHeight;
+        }
+
+        async function testSystem() {
+            log('Verificando conectividad del sistema...');
+            try {
+                const response = await fetch('/api/test-env');
+                const data = await response.json();
+                log(`Conectividad: ${JSON.stringify(data)}`, 'success');
+                
+                // Test de documentos
+                const docsResponse = await fetch('/api/documents?limit=3');
+                if (docsResponse.ok) {
+                    const docsData = await docsResponse.json();
+                    log(`Documentos existentes: ${docsData.documents?.length || 0}`, 'info');
+                } else {
+                    log(`Error al consultar documentos: ${docsResponse.status}`, 'error');
+                }
+            } catch (error) {
+                log(`Error de conectividad: ${error.message}`, 'error');
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            log('Iniciando login...');
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.token;
+                    document.getElementById('uploadBtn').disabled = false;
+                    log(`Login exitoso. Token: ${authToken.substring(0, 20)}...`, 'success');
+                } else {
+                    log(`Error de login: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                log(`Error de login: ${error.message}`, 'error');
+            }
+        }
+
+        async function uploadDocument() {
+            if (!authToken) {
+                log('Primero debes hacer login', 'error');
+                return;
+            }
+
+            const file = document.getElementById('file').files[0];
+            if (!file) {
+                log('Selecciona un archivo', 'error');
+                return;
+            }
+
+            log('Iniciando upload...');
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('documentData', JSON.stringify({
+                title: document.getElementById('title').value,
+                author: document.getElementById('author').value,
+                type: 'libros', // Changed from document.getElementById('type').value to ensure a valid enum
+                year: document.getElementById('year').value,
+                description: document.getElementById('description').value,
+                featured: false
+            }));
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`Upload exitoso: ${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    log(`Error de upload: ${data.error}`, 'error');
+                    if (data.details) {
+                        log(`Detalles: ${data.details}`, 'error');
+                    }
+                }
+            } catch (error) {
+                log(`Error de upload: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkDocuments() {
+            log('Verificando documentos en base de datos...');
+            
+            try {
+                const response = await fetch('/api/documents?limit=5');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`Documentos encontrados: ${data.documents?.length || 0}`, 'success');
+                    if (data.documents && data.documents.length > 0) {
+                        data.documents.forEach((doc, index) => {
+                            log(`${index + 1}. ${doc.title} - ${doc.author} (${doc.file_name || 'Sin archivo'})`, 'info');
+                        });
+                    }
+                } else {
+                    log(`Error al consultar documentos: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-test al cargar
+        window.onload = function() {
+            testSystem();
+        };
+    </script>
+</body>
+</html>

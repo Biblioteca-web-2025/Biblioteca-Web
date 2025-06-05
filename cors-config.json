@@ -1,0 +1,30 @@
+[
+  {
+    "AllowedOrigins": [
+      "http://localhost:3000",
+      "https://localhost:3000",
+      "https://*.vercel.app",
+      "https://*.netlify.app"
+    ],
+    "AllowedMethods": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "HEAD",
+      "OPTIONS"
+    ],
+    "AllowedHeaders": [
+      "*"
+    ],
+    "ExposeHeaders": [
+      "ETag",
+      "Content-Length",
+      "Content-Type",
+      "Content-Disposition",
+      "Content-Range",
+      "Accept-Ranges"
+    ],
+    "MaxAgeSeconds": 86400
+  }
+]
