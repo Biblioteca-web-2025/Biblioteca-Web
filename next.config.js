@@ -15,6 +15,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "pub-aa3e90cbe7a3485dbebd3a2a844e0e41.r2.dev",
+      },
+      {
+        protocol: "https",
         hostname: "blob.v0.dev",
       },
     ],
@@ -24,9 +28,8 @@ const nextConfig = {
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
-  // Configuración para Cloudflare Pages
+  // Configuración para Vercel
   trailingSlash: false,
-  output: "standalone",
   poweredByHeader: false,
   compress: true,
   generateEtags: false,
