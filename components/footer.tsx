@@ -10,7 +10,7 @@ export function Footer() {
           <div className="mb-6 md:mb-0">
             <div className="flex items-center gap-2 mb-4">
               <BookOpen className="h-6 w-6 text-primary" />
-              <span className="font-medium text-xl">Biblioteca Digital</span>
+              <span className="font-medium text-xl">Biblioteca Digital Corporación EPE</span>
             </div>
             <p className="text-muted-foreground text-sm max-w-md">
               Una plataforma educativa para compartir y acceder a recursos académicos de calidad.
@@ -58,7 +58,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t mt-12 pt-6 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Biblioteca Digital. Todos los derechos reservados.
+          © {new Date().getFullYear()} Biblioteca Digital Corporación EPE. Todos los derechos reservados.
         </div>
       </div>
     </footer>

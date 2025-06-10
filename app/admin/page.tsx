@@ -215,7 +215,7 @@ export default function AdminPage() {
               <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
                 Panel de Administración
               </h1>
-              <p className="text-muted-foreground mt-2">Gestiona y organiza la biblioteca digital</p>
+              <p className="text-muted-foreground mt-2">Gestiona y organiza la biblioteca digital Corporación EPE</p>
             </div>
           </div>
 

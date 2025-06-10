@@ -8,8 +8,8 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Biblioteca Digital",
-  description: "Biblioteca digital con documentos en PDF",
+  title: "Biblioteca Digital Corporación EPE",
+  description: "Biblioteca digital Corporación EPE con documentos en PDF",
     generator: 'v0.dev'
 }
 

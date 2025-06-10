@@ -125,7 +125,7 @@ export default function LoginPage() {
                 <span className="text-white font-bold text-sm">B</span>
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
-                Biblioteca Digital
+                Biblioteca Digital Corporación EPE
               </span>
             </Link>
           </div>

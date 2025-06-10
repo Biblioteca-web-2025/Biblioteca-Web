@@ -22,7 +22,7 @@ export default function NewDocumentPage() {
       <div className="mb-6">
         <h1 className="text-3xl font-bold">Nuevo Documento</h1>
         <p className="text-gray-600 mt-2">
-          Agrega un nuevo documento a la biblioteca digital
+          Agrega un nuevo documento a la biblioteca digital Corporación EPE
         </p>
       </div>
       

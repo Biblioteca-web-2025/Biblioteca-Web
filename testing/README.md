@@ -1,6 +1,6 @@
 # Testing Structure
 
-Este directorio contiene todos los archivos relacionados con testing para el proyecto Biblioteca Digital.
+Este directorio contiene todos los archivos relacionados con testing para el proyecto Biblioteca Digital Corporación EPE.
 
 ## Estructura
 
